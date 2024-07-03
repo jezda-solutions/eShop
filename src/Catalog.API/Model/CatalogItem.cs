@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using Pgvector;
 
 namespace eShop.Catalog.API.Model;
 
@@ -31,13 +29,12 @@ public class CatalogItem
     // Available stock at which we should reorder
     public int RestockThreshold { get; set; }
 
-
     // Maximum number of units that can be in-stock at any time (due to physicial/logistical constraints in warehouses)
     public int MaxStockThreshold { get; set; }
 
     /// <summary>Optional embedding for the catalog item's description.</summary>
-    [JsonIgnore]
-    public Vector Embedding { get; set; }
+    //[JsonIgnore]
+    //public Vector Embedding { get; set; }
 
     /// <summary>
     /// True if item is on reorder
@@ -58,7 +55,6 @@ public class CatalogItem
     /// </summary>
     /// <param name="quantityDesired"></param>
     /// <returns>int: Returns the number actually removed from stock. </returns>
-    /// 
     public int RemoveStock(int quantityDesired)
     {
         if (AvailableStock == 0)

@@ -196,7 +196,7 @@ public sealed class RabbitMQEventBus(
 
         // Deserialize the event
         var integrationEvent = DeserializeMessage(message, eventType);
-        
+
         // REVIEW: This could be done in parallel
 
         // Get all the handlers using the event type as the key
@@ -233,6 +233,7 @@ public sealed class RabbitMQEventBus(
                 logger.LogInformation("Starting RabbitMQ connection on a background thread");
 
                 _rabbitMQConnection = serviceProvider.GetRequiredService<IConnection>();
+
                 if (!_rabbitMQConnection.IsOpen)
                 {
                     return;

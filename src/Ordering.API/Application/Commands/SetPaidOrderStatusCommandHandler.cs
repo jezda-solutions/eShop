@@ -3,10 +3,14 @@
 // Regular CommandHandler
 public class SetPaidOrderStatusCommandHandler : IRequestHandler<SetPaidOrderStatusCommand, bool>
 {
+    private readonly ILogger<SetPaidOrderStatusCommandHandler> _logger;
     private readonly IOrderRepository _orderRepository;
 
-    public SetPaidOrderStatusCommandHandler(IOrderRepository orderRepository)
+    public SetPaidOrderStatusCommandHandler(
+        ILogger<SetPaidOrderStatusCommandHandler> logger,
+        IOrderRepository orderRepository)
     {
+        _logger = logger;
         _orderRepository = orderRepository;
     }
 
@@ -18,7 +22,8 @@ public class SetPaidOrderStatusCommandHandler : IRequestHandler<SetPaidOrderStat
     /// <returns></returns>
     public async Task<bool> Handle(SetPaidOrderStatusCommand command, CancellationToken cancellationToken)
     {
-        // Simulate a work time for validating the payment
+        _logger.LogInformation("Delay 10 sec and simulate a work time for validating the payment for the order {OrderNumber}", command.OrderNumber);
+
         await Task.Delay(10000, cancellationToken);
 
         var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber);

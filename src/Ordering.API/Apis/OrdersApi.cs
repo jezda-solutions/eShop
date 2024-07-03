@@ -10,9 +10,11 @@ public static class OrdersApi
 
         api.MapPut("/cancel", CancelOrderAsync);
         api.MapPut("/ship", ShipOrderAsync);
+
         api.MapGet("{orderId:int}", GetOrderAsync);
         api.MapGet("/", GetOrdersByUserAsync);
         api.MapGet("/cardtypes", GetCardTypesAsync);
+
         api.MapPost("/draft", CreateOrderDraftAsync);
         api.MapPost("/", CreateOrderAsync);
 
@@ -120,9 +122,9 @@ public static class OrdersApi
         CreateOrderRequest request,
         [AsParameters] OrderServices services)
     {
-        
+
         //mask the credit card number
-        
+
         services.Logger.LogInformation(
             "Sending command: {CommandName} - {IdProperty}: {CommandId}",
             request.GetGenericTypeName(),

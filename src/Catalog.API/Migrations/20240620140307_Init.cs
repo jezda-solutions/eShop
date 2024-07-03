@@ -1,36 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Pgvector;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace eShop.Catalog.API.Infrastructure.Migrations
+namespace Catalog.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:vector", ",,");
-
-            migrationBuilder.CreateSequence(
-                name: "catalog_brand_hilo",
-                incrementBy: 10);
-
-            migrationBuilder.CreateSequence(
-                name: "catalog_hilo",
-                incrementBy: 10);
-
-            migrationBuilder.CreateSequence(
-                name: "catalog_type_hilo",
-                incrementBy: 10);
-
             migrationBuilder.CreateTable(
                 name: "CatalogBrand",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Brand = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -42,7 +29,8 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                 name: "CatalogType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -51,10 +39,28 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IntegrationEventLog",
+                columns: table => new
+                {
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EventTypeName = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false),
+                    TimesSent = table.Column<int>(type: "integer", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    TransactionId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IntegrationEventLog", x => x.EventId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Catalog",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
@@ -64,7 +70,6 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                     AvailableStock = table.Column<int>(type: "integer", nullable: false),
                     RestockThreshold = table.Column<int>(type: "integer", nullable: false),
                     MaxStockThreshold = table.Column<int>(type: "integer", nullable: false),
-                    Embedding = table.Column<Vector>(type: "vector(384)", nullable: true),
                     OnReorder = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -93,6 +98,11 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                 name: "IX_Catalog_CatalogTypeId",
                 table: "Catalog",
                 column: "CatalogTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Catalog_Name",
+                table: "Catalog",
+                column: "Name");
         }
 
         /// <inheritdoc />
@@ -102,19 +112,13 @@ namespace eShop.Catalog.API.Infrastructure.Migrations
                 name: "Catalog");
 
             migrationBuilder.DropTable(
+                name: "IntegrationEventLog");
+
+            migrationBuilder.DropTable(
                 name: "CatalogBrand");
 
             migrationBuilder.DropTable(
                 name: "CatalogType");
-
-            migrationBuilder.DropSequence(
-                name: "catalog_brand_hilo");
-
-            migrationBuilder.DropSequence(
-                name: "catalog_hilo");
-
-            migrationBuilder.DropSequence(
-                name: "catalog_type_hilo");
         }
     }
 }

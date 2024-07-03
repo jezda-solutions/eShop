@@ -28,6 +28,8 @@ public class CreateOrderCommandHandler
 
     public async Task<bool> Handle(CreateOrderCommand message, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Handler when command is received - CreateOrderCommand");
+
         // Add Integration event to clean the basket
         var orderStartedIntegrationEvent = new OrderStartedIntegrationEvent(message.UserId);
         await _orderingIntegrationEventService.AddAndSaveEventAsync(orderStartedIntegrationEvent);

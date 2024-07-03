@@ -9,7 +9,7 @@ public class OrderStatusChangedToPaidIntegrationEventHandler(
     {
         logger.LogInformation("Handling integration event: {IntegrationEventId} - ({@IntegrationEvent})", @event.Id, @event);
 
-        //we're not blocking stock/inventory
+        // we're not blocking stock/inventory
         foreach (var orderStockItem in @event.OrderStockItems)
         {
             var catalogItem = catalogContext.CatalogItems.Find(orderStockItem.ProductId);

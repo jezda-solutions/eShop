@@ -3,10 +3,14 @@
 // Regular CommandHandler
 public class SetAwaitingValidationOrderStatusCommandHandler : IRequestHandler<SetAwaitingValidationOrderStatusCommand, bool>
 {
+    private readonly ILogger<SetAwaitingValidationOrderStatusCommandHandler> _logger;
     private readonly IOrderRepository _orderRepository;
 
-    public SetAwaitingValidationOrderStatusCommandHandler(IOrderRepository orderRepository)
+    public SetAwaitingValidationOrderStatusCommandHandler(
+        ILogger<SetAwaitingValidationOrderStatusCommandHandler> logger,
+        IOrderRepository orderRepository)
     {
+        _logger = logger;
         _orderRepository = orderRepository;
     }
 
@@ -18,6 +22,8 @@ public class SetAwaitingValidationOrderStatusCommandHandler : IRequestHandler<Se
     /// <returns></returns>
     public async Task<bool> Handle(SetAwaitingValidationOrderStatusCommand command, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Handler which processes the command when graceperiod has finished");
+
         var orderToUpdate = await _orderRepository.GetAsync(command.OrderNumber);
         if (orderToUpdate == null)
         {

@@ -59,10 +59,12 @@ public partial class CatalogContextSeed(
             {
                 logger.LogInformation("Generating {NumItems} embeddings", catalogItems.Length);
                 IReadOnlyList<Vector> embeddings = await catalogAI.GetEmbeddingsAsync(catalogItems);
-                for (int i = 0; i < catalogItems.Length; i++)
-                {
-                    catalogItems[i].Embedding = embeddings[i];
-                }
+
+                // commented as we are missing Vector in postgres
+                //for (int i = 0; i < catalogItems.Length; i++)
+                //{
+                //    catalogItems[i].Embedding = embeddings[i];
+                //}
             }
 
             await context.CatalogItems.AddRangeAsync(catalogItems);

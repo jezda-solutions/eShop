@@ -11,10 +11,10 @@ var postgres = builder.AddPostgres("postgres")
     .WithImage("ankane/pgvector")
     .WithImageTag("latest");
 
-var catalogDb = postgres.AddDatabase("catalogdb");
-var identityDb = postgres.AddDatabase("identitydb");
-var orderDb = postgres.AddDatabase("orderingdb");
-var webhooksDb = postgres.AddDatabase("webhooksdb");
+var catalogDb = postgres.AddDatabase("shop-catalog");
+var identityDb = postgres.AddDatabase("shop-identity");
+var orderDb = postgres.AddDatabase("shop-ordering");
+var webhooksDb = postgres.AddDatabase("shop-webhooks");
 
 var launchProfileName = ShouldUseHttpForEndpoints() ? "http" : "https";
 
